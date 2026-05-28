@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invito a cena</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #2b1d2f, #4a2c2a, #7a4e2d);
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .card {
+      width: min(92vw, 520px);
+      min-height: 420px;
+      background: #fffaf3;
+      border-radius: 28px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+      padding: 36px 28px;
+      text-align: center;
+      position: relative;
+      overflow: visible;
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.45s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      margin-bottom: 16px;
+      color: #241b1b;
+    }
+
+    h2 {
+      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      margin-bottom: 16px;
+      color: #241b1b;
+    }
+
+    p {
+      color: #5d5050;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 42px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+      min-height: 90px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 14px 30px;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, left 0.38s ease, top 0.38s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.14);
+    }
+
+    .yes {
+      background: #8b3a3a;
+      color: white;
+    }
+
+    .no {
+      background: #efe7dc;
+      color: #241b1b;
+      position: static;
+    }
+
+    .no.running {
+      position: fixed;
+      z-index: 10;
+    }
+
+    .date-box {
+      display: grid;
+      gap: 10px;
+      margin: 26px 0 24px;
+      text-align: left;
+    }
+
+    .date-box label {
+      color: #5d5050;
+      font-weight: 700;
+      padding-left: 6px;
+    }
+
+    .date-box input {
+      width: 100%;
+      border: 2px solid #eadfd2;
+      border-radius: 18px;
+      padding: 15px 16px;
+      font-size: 1rem;
+      background: white;
+      color: #241b1b;
+      outline: none;
+    }
+
+    .date-box input:focus {
+      border-color: #8b3a3a;
+    }
+
+    .options {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .option {
+      width: 100%;
+      background: white;
+      color: #241b1b;
+      border: 2px solid #eadfd2;
+    }
+
+    .option:hover {
+      border-color: #8b3a3a;
+    }
+
+    .summary {
+      background: #f7efe6;
+      border-radius: 20px;
+      padding: 20px;
+      margin: 22px 0;
+      color: #241b1b;
+      line-height: 1.7;
+    }
+
+    .small {
+      font-size: 0.92rem;
+      color: #776b6b;
+      margin-top: 18px;
+      margin-bottom: 0;
+    }
+
+    .icon {
+      font-size: 3.6rem;
+      margin-bottom: 12px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <section id="page-intro" class="page active">
+      <div class="icon">✨</div>
+      <h1>Ciaoo Aluzz!!!</h1>
+      <p>
+        Mi stavo annoiando e ti pensavo quindi..<br>
+        Ho una proposta per te..    
+      </p>
+      <button class="yes" onclick="goToPage('page-invite')">Scopri 👀</button>
+    </section>
+
+    <section id="page-invite" class="page">
+      <div class="icon"> 👉🏻👈🏻</div>
+      <h1>Proposta</h1>
+      <p>Ti andrebbe di venire a cena fuori  con me?</p>
+      <div class="buttons">
+        <button class="yes" onclick="goToPage('page-day')">Sì 😌</button>
+        <button id="noButton" class="no">No 🙃</button>
+      </div>
+    </section>
+
+    <section id="page-no" class="page">
+      <div class="icon">😌</div>
+      <h2>Va bene, capisco</h2>
+      <p>
+        Però prima di chiudere tutto: sei proprio sicura sicura?<br>
+        Puoi tornare indietro e rivalutare con calma.
+      </p>
+      <div class="buttons">
+        <button class="yes" onclick="goToPage('page-invite')">Ci ripenso</button>
+        <button class="no" onclick="goToPage('page-broken')">Sono sicura</button>
+      </div>
+    </section>
+
+    <section id="page-broken" class="page">
+      <div class="icon">💔</div>
+    </section>
+
+    <section id="page-day" class="page">
+      <h2>Molto bene 😌</h2>
+      <p>Ora dimmi giorno e ora in cui sei libera per una cena.</p>
+
+      <div class="date-box">
+        <label for="dateChoice">Scegli data e ora</label>
+        <input id="dateChoice" type="datetime-local" />
+      </div>
+
+      <button class="yes" onclick="selectDateTime()">Conferma</button>
+    </section>
+
+    <section id="page-food" class="page">
+      <h2>Ottima scelta</h2>
+      <p>Ora scegli cosa ti andrebbe per cena.</p>
+      <div class="options">
+        <button class="option" onclick="selectFood('Pizza')">🍕 Pizza</button>
+        <button class="option" onclick="selectFood('Hamburger')">🍔 Hamburger</button>
+        <button class="option" onclick="selectFood('Sushi')">🍣 Sushi</button>
+        <button class="option" onclick="selectFood('Pasta')">🍝 Pasta</button>
+        <button class="option" onclick="selectFood('Sorpresa scelta da me')">✨ Sorpresa scelta da me</button>
+      </div>
+    </section>
+
+    <section id="page-final" class="page">
+      <div class="icon">❤️</div>
+      <h2>Affare fatto</h2>
+      <div class="summary" id="summary"></div>
+      <p>Ora devi solo mandarmi una foto della pagina, così io faccio il resto.</p>
+      <button class="yes" onclick="restart()">Ricomincia</button>
+    </section>
+  </main>
+
+  <script>
+    let chosenDay = "";
+    let chosenFood = "";
+    let noAttempts = 0;
+
+    const noButton = document.getElementById('noButton');
+
+    function goToPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+
+      document.getElementById(pageId).classList.add('active');
+
+      if (pageId === 'page-invite') {
+        noAttempts = 0;
+        resetNoButton();
+      }
+    }
+
+    function selectDateTime() {
+      const dateInput = document.getElementById('dateChoice');
+
+      if (!dateInput.value) {
+        alert('Prima scegli giorno e ora 😌');
+        return;
+      }
+
+      const date = new Date(dateInput.value);
+      chosenDay = date.toLocaleString('it-IT', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      goToPage('page-food');
+    }
+
+    function selectFood(food) {
+      chosenFood = food;
+      document.getElementById('summary').innerHTML = `
+        <strong>Giorno:</strong> ${chosenDay}<br>
+        <strong>Cena:</strong> ${chosenFood}<br><br>
+        Direi che abbiamo ufficialmente un piano.
+      `;
+      goToPage('page-final');
+    }
+
+    function restart() {
+      chosenDay = "";
+      chosenFood = "";
+      noAttempts = 0;
+      resetNoButton();
+      goToPage('page-intro');
+    }
+
+    function moveNoButton() {
+      if (noAttempts >= 3) {
+        noButton.textContent = 'No 🙃';
+        return;
+      }
+
+      noAttempts++;
+
+      if (!noButton.classList.contains('running')) {
+        const rect = noButton.getBoundingClientRect();
+        noButton.classList.add('running');
+        noButton.style.left = `${rect.left}px`;
+        noButton.style.top = `${rect.top}px`;
+      }
+
+      const padding = 28;
+      const maxX = window.innerWidth - noButton.offsetWidth - padding;
+      const maxY = window.innerHeight - noButton.offsetHeight - padding;
+
+      const randomX = Math.max(padding, Math.random() * maxX);
+      const randomY = Math.max(padding, Math.random() * maxY);
+
+      noButton.style.left = `${randomX}px`;
+      noButton.style.top = `${randomY}px`;
+
+      if (noAttempts >= 5) {
+        noButton.textContent = 'No 🙃';
+      }
+    }
+
+    function handleNoClick() {
+      if (noAttempts >= 3) {
+        noAttempts = 0;
+        resetNoButton();
+        goToPage('page-no');
+        return;
+      }
+
+      moveNoButton();
+    }
+
+    function resetNoButton() {
+      noButton.classList.remove('running');
+      noButton.style.left = '';
+      noButton.style.top = '';
+      noButton.textContent = 'No 🙃';
+    }
+
+    noButton.addEventListener('mouseenter', moveNoButton);
+    noButton.addEventListener('click', handleNoClick);
+    noButton.addEventListener('touchstart', moveNoButton);
+
+    window.addEventListener('resize', resetNoButton);
+  </script>
+</body>
+</html>
